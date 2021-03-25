@@ -223,7 +223,7 @@ spec:
   selector:
     matchLabels:
       app: ts-assurance-service
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -398,7 +398,7 @@ spec:
   selector:
     matchLabels:
       app: ts-consign-service
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -468,7 +468,7 @@ spec:
   selector:
     matchLabels:
       app: ts-execute-service
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -482,11 +482,11 @@ spec:
         - containerPort: 12386
         resources:
           requests:
-            cpu: 50m
-            memory: 160Mi
+            cpu: 1024m
+            memory: 1024Mi
           limits:
-            cpu: 200m
-            memory: 500Mi
+            cpu: 1500m
+            memory: 1500Mi
         readinessProbe:
           tcpSocket:
             port: 12386
@@ -573,7 +573,7 @@ spec:
   selector:
     matchLabels:
       app: ts-inside-payment-service
-  replicas: 1
+  replicas: 5
   template:
     metadata:
       labels:
@@ -587,11 +587,11 @@ spec:
         - containerPort: 18673
         resources:
           requests:
-            cpu: 1024m
-            memory: 1024Mi
+            cpu: 4000m
+            memory: 4000Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 4500m
+            memory: 4500Mi
         readinessProbe:
           tcpSocket:
             port: 18673
@@ -608,7 +608,7 @@ spec:
   selector:
     matchLabels:
       app: ts-auth-service
-  replicas: 10
+  replicas: 5
   template:
     metadata:
       labels:
@@ -622,11 +622,11 @@ spec:
         - containerPort: 12340
         resources:
           requests:
-            cpu: 2500m
-            memory: 1500Mi
-          limits:
             cpu: 3000m
-            memory: 2048Mi
+            memory: 2000Mi
+          limits:
+            cpu: 3500m
+            memory: 2500Mi
         readinessProbe:
           tcpSocket:
             port: 12340
@@ -748,7 +748,7 @@ spec:
   selector:
     matchLabels:
       app: ts-order-service
-  replicas: 6
+  replicas: 5
   template:
     metadata:
       labels:
@@ -762,11 +762,11 @@ spec:
         - containerPort: 12031
         resources:
           requests:
+            cpu: 3500m
+            memory: 3500Mi
+          limits:
             cpu: 4096m
             memory: 4096Mi
-          limits:
-            cpu: 5120m
-            memory: 5120Mi
         readinessProbe:
           tcpSocket:
             port: 12031
@@ -797,11 +797,11 @@ spec:
         - containerPort: 19001
         resources:
           requests:
-            cpu: 500m
-            memory: 800Mi
-          limits:
             cpu: 1024m
             memory: 1024Mi
+          limits:
+            cpu: 1500m
+            memory: 1200Mi
         readinessProbe:
           tcpSocket:
             port: 19001
@@ -867,11 +867,11 @@ spec:
         - containerPort: 14568
         resources:
           requests:
-            cpu: 1024m
-            memory: 1024Mi
-          limits:
             cpu: 1500m
             memory: 1500Mi
+          limits:
+            cpu: 2000m
+            memory: 2000Mi
         readinessProbe:
           tcpSocket:
             port: 14568
@@ -902,11 +902,11 @@ spec:
         - containerPort: 16579
         resources:
           requests:
-            cpu: 500m
-            memory: 800Mi
-          limits:
             cpu: 1024m
-            memory: 1200Mi
+            memory: 1024Mi
+          limits:
+            cpu: 1500m
+            memory: 1300Mi
         readinessProbe:
           tcpSocket:
             port: 16579
@@ -993,7 +993,7 @@ spec:
   selector:
     matchLabels:
       app: ts-route-service
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -1007,11 +1007,11 @@ spec:
         - containerPort: 11178
         resources:
           requests:
-            cpu: 500m
-            memory: 700Mi
+            cpu: 1024m
+            memory: 1024Mi
           limits:
-            cpu: 1000m
-            memory: 1200Mi
+            cpu: 1500m
+            memory: 1500Mi
         readinessProbe:
           tcpSocket:
             port: 11178
@@ -1238,7 +1238,7 @@ spec:
   selector:
     matchLabels:
       app: ts-train-service
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -1252,10 +1252,10 @@ spec:
         - containerPort: 14567
         resources:
           requests:
-            cpu: 500m
+            cpu: 1024m
             memory: 1024Mi
           limits:
-            cpu: 1024m
+            cpu: 1500m
             memory: 1500Mi
         readinessProbe:
           tcpSocket:
@@ -1273,7 +1273,7 @@ spec:
   selector:
     matchLabels:
       app: ts-travel2-service
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -1287,11 +1287,11 @@ spec:
         - containerPort: 16346
         resources:
           requests:
-            cpu: 500m
-            memory: 700Mi
-          limits:
             cpu: 1024m
             memory: 1000Mi
+          limits:
+            cpu: 1500m
+            memory: 1500Mi
         readinessProbe:
           tcpSocket:
             port: 16346
@@ -1343,7 +1343,7 @@ spec:
   selector:
     matchLabels:
       app: ts-travel-service
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:

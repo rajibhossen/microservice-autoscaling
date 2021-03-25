@@ -7,20 +7,20 @@ JAEGER_URL = "http://192.168.2.11:32688"
 services = ['ts-order-service', 'ts-auth-service', 'ts-basic-service']
 
 
-def jaeger_tracing():
+def jaeger_tracing(container_name):
     time_delta = 1  # in minutes
     end_timestamp = datetime.datetime.now().timestamp()
     start_timestamp = datetime.datetime.now() - datetime.timedelta(minutes=1)
     start_timestamp = start_timestamp.timestamp()
     # print(start_timestamp, end_timestamp)
-    # start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime('%s') + '000000'
-    # end_date = datetime.datetime.fromtimestamp(end_timestamp).strftime('%s') + '000000'
+    start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime('%s') + '000000'
+    end_date = datetime.datetime.fromtimestamp(end_timestamp).strftime('%s') + '000000'
 
-    start_date = "1614028834144000"
-    end_date = "1614032434144000"
+    #start_date = "1614028834144000"
+    #end_date = "1614032434144000"
 
-    service_name = 'ts-travel-service'
-    uri = JAEGER_URL + "/api/traces?end=" + end_date + "&limit=&lookback=custom&maxDuration&minDuration&service=" + service_name + "&start=" + start_date
+    #service_name = 'ts-travel-service'
+    uri = JAEGER_URL + "/api/traces?end=" + end_date + "&limit=&lookback=custom&maxDuration&minDuration&service=" + container_name + "&start=" + start_date
     headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
     print(uri)
     traces = requests.get(url=uri, headers=headers)
@@ -71,6 +71,6 @@ def jaeger_tracing():
 
 
 if __name__ == '__main__':
-    data = jaeger_tracing()
+    data = jaeger_tracing("ts-order-service")
     #print(json.dumps(data))
     # train_ticket()
