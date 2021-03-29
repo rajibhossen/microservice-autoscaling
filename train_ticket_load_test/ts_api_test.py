@@ -315,5 +315,5 @@ def admin_api_test():
 
 
 if __name__ == '__main__':
-    basic_api_test()
-    #admin_api_test()
+    #basic_api_test()
+    admin_api_test()
