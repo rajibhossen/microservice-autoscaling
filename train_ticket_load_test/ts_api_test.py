@@ -8,7 +8,7 @@ from numpy.random import randint
 from train_ticket_load_test.test_data import USER_CREDETIALS
 
 
-class ApiTest():
+class ApiTest:
     def __init__(self):
         self.username = "fdse_microservice"
         self.password = "111111"
