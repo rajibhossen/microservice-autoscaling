@@ -9,27 +9,30 @@ import threading
 import requests
 from datetime import datetime
 from test_data import USER_CREDETIALS, TRIP_DATA, TRAVEL_DATES
+import sys
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-handler = logging.FileHandler(os.path.join(dir_path, "logs/temp.log"))
-handler.setFormatter(logging.Formatter('%(message)s'))
-logger = logging.getLogger("Requests logger")
-logger.setLevel(logging.INFO)
-
-logger.addHandler(handler)
+total_user = 0
 
 
-def log_requests(to_log):
-    if logger is not None:
-        logger.info(to_log)
+def setup_logger(file_name):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    handler = logging.FileHandler(os.path.join(dir_path, "load_data/" + file_name + ".log"))
+    handler.setFormatter(logging.Formatter('%(message)s'))
+    logger = logging.getLogger("Requests logger")
+    logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+    logger.info("arrival_time,service,status_code,response_time,user")
+    return logger
 
 
-log_requests("arrival_time,service,status_code,response_time")
+# def log_requests(to_log):
+#     if logger is not None:
+#         logger.info(to_log)
 
 
 class Requests:
 
-    def __init__(self):
+    def __init__(self, logger, uuid):
         self.host = "http://192.168.2.11:32677"
         user = random.choice(USER_CREDETIALS)
         self.user_name = user
@@ -37,6 +40,8 @@ class Requests:
         self.trip_detail = random.choice(TRIP_DATA)
         self.food_detail = {}
         self.departure_date = random.choice(TRAVEL_DATES)
+        self.logger = logger
+        self.request_uuid = uuid
         # self.user_name = "fdse_microservice"
         # self.password = "111111"
 
@@ -45,11 +50,9 @@ class Requests:
         start_time = time.time()
         response = requests.get(self.host + '/index.html')
         response_time = time.time() - start_time
-        # to_log = {'name': "home", 'status_code': response.status_code,
-        #           'response_time': response_time}
-        response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "home," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "home," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
 
     def search_ticket(self):
         arrival_time = datetime.now()
@@ -74,11 +77,10 @@ class Requests:
                 url=self.host + "/api/v1/travel2service/trips/left",
                 headers=head,
                 json=body_start)
-        # to_log = {'name': "search_ticket", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "search_ticket," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "search_ticket," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
 
     def login(self):
         start_time = time.time()
@@ -92,11 +94,10 @@ class Requests:
                                      "username": self.user_name,
                                      "password": self.password
                                  })
-        # to_log = {'name': "login", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "login," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "login," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
         response_as_json = response.json()["data"]
@@ -121,11 +122,10 @@ class Requests:
                 self.trip_detail["seat_price"] +
                 "&date=" + departure_date,
             headers=head)
-        # to_log = {'name': "start_booking", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "start_booking," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "start_booking," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def get_assurance_types(self):
@@ -136,11 +136,10 @@ class Requests:
         response = requests.get(
             url=self.host + "/api/v1/assuranceservice/assurances/types",
             headers=head)
-        # to_log = {'name': "get_assurance_types", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "get_assurance_types," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "get_assurance_types," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def get_foods(self):
@@ -153,11 +152,10 @@ class Requests:
             url=self.host + "/api/v1/foodservice/foods/" + departure_date + "/" + self.trip_detail["from"] + "/" +
                 self.trip_detail["to"] + "/" + self.trip_detail["trip_id"],
             headers=head)
-        # to_log = {'name': "get_foods", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "get_foods," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "get_foods," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def select_contact(self):
@@ -184,12 +182,10 @@ class Requests:
         else:
             self.contactid = response_as_json_contacts[0]["id"]
 
-        # to_log = {'name': "select_contact", 'status_code': response_contacts.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
         to_log = str(arrival_time) + "," + "select_contact," + str(response_contacts.status_code) + "," + str(
-            response_time)
-        log_requests(to_log)
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def finish_booking(self):
@@ -222,11 +218,10 @@ class Requests:
             url=self.host + "/api/v1/preserveservice/preserve",
             headers=head,
             json=body_for_reservation)
-        # to_log = {'name': "finish_booking", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "finish_booking," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "finish_booking," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def select_order(self):
@@ -242,21 +237,21 @@ class Requests:
                 "enableBoughtDateQuery": "false", "travelDateStart": "null", "travelDateEnd": "null",
                 "boughtDateStart": "null", "boughtDateEnd": "null"})
 
-        # to_log = {'name': "select_order", 'status_code': response_order_refresh.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
         to_log = str(arrival_time) + "," + "select_order," + str(response_order_refresh.status_code) + "," + str(
-            response_time)
-        log_requests(to_log)
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
         response_as_json = response_order_refresh.json()["data"]
         if response_as_json:
             self.order_id = response_as_json[0]["id"]  # first order with paid or not paid
             self.paid_order_id = response_as_json[0]["id"]  # default first order with paid or unpaid.
+            self.order_trip_id = response_as_json[0]["trainNumber"]
         else:
             self.order_id = "sdasdasd"  # no orders, set a random number
             self.paid_order_id = "asdasdasn"
+            self.order_trip_id = "d1234"
         # selecting order with payment status - not paid.
         for orders in response_as_json:
             if orders["status"] == 0:
@@ -279,12 +274,11 @@ class Requests:
             url=self.host + "/api/v1/inside_pay_service/inside_payment",
             headers=head,
             json={"orderId": self.order_id, "tripId": self.order_trip_id})
-        # to_log = {'name': "pay", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "pay," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
-        print(response.text)
+        to_log = str(arrival_time) + "," + "pay," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
+        # print(response.text)
 
     # cancelNoRefund
 
@@ -296,12 +290,10 @@ class Requests:
         response = requests.get(
             url=self.host + "/api/v1/cancelservice/cancel/" + self.order_id + "/" + self.user_id,
             headers=head)
-        # to_log = {'name': "cancel_no_refund", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
         to_log = str(arrival_time) + "," + "cancel_with_no_refund," + str(response.status_code) + "," + str(
-            response_time)
-        log_requests(to_log)
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     # user refund with voucher
@@ -315,11 +307,10 @@ class Requests:
             url=self.host + "/getVoucher",
             headers=head,
             json={"orderId": self.order_id, "type": 1})
-        # to_log = {'name': "get_voucher", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "get_voucher," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "get_voucher," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     # consign ticket
@@ -332,11 +323,10 @@ class Requests:
         response = requests.get(
             url=self.host + "/api/v1/consignservice/consigns/order/" + self.order_id,
             headers=head)
-        # to_log = {'name': "get_consigns", 'status_code': response.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "get_consigns," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "get_consigns," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def confirm_consign(self):
@@ -358,11 +348,10 @@ class Requests:
                 "id": "",
                 "isWithin": "false"},
             headers=head)
-        # to_log = {'name': "confirm_consign", 'status_code': response_as_json_consign.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "search_ticket," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "search_ticket," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def collect_ticket(self):
@@ -378,8 +367,8 @@ class Requests:
         #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
         to_log = str(arrival_time) + "," + "collect_ticket," + str(
-            response_as_json_collect_ticket.status_code) + "," + str(response_time)
-        log_requests(to_log)
+            response_as_json_collect_ticket.status_code) + "," + str(response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def enter_station(self):
@@ -391,52 +380,61 @@ class Requests:
         response = requests.get(
             url=self.host + "/api/v1/executeservice/execute/execute/" + self.paid_order_id,
             headers=head)
-        # to_log = {'name': "enter_station",
-        #           'status_code': response_as_json_enter_station.status_code,
-        #           'response_time': time.time() - start_time}
         response_time = time.time() - start_time
-        to_log = str(arrival_time) + "," + "enter_station," + str(response.status_code) + "," + str(response_time)
-        log_requests(to_log)
+        to_log = str(arrival_time) + "," + "enter_station," + str(response.status_code) + "," + str(
+            response_time) + "," + self.request_uuid
+        self.logger.info(to_log)
         # print(to_log)
 
     def perform_task(self, name):
-        # name_without_suffix = name.replace("_expected", "").replace("_unexpected", "")
         task = getattr(self, name)
         task()
 
 
-def user_tasks():
+def user_tasks(logger, uuid):
+    global total_user
+    total_user += 1
     collect_tasks = ["home", "login", "select_order", "pay", "collect_ticket", ]
-    search_tasks = ["home", "search_ticket"]
-    booking_tasks = ["home", "login", "search_ticket", "start_booking", "get_assurance_types", "get_foods",
+    search_tasks = ["search_ticket"]
+    booking_tasks = ["login", "search_ticket", "start_booking", "get_assurance_types", "get_foods",
                      "select_contact", "finish_booking"]
-    consign_tasks = ["home", "login", "select_contact", "finish_booking", "select_order", "get_consigns",
+    consign_tasks = ["login", "select_contact", "finish_booking", "select_order", "get_consigns",
                      "confirm_consign"]
     pay_tasks = ["home", "login", "select_contact", "finish_booking", "select_order", "pay"]
-    #tasks = random.choice([search_tasks, booking_tasks, consign_tasks, pay_tasks, collect_tasks])
-    tasks = pay_tasks
-    #print("Tasks - ", tasks)
-    req_obj = Requests()
+    tasks = random.choice([search_tasks, booking_tasks, consign_tasks])
+    # print("Tasks - ", tasks)
+    # uuid = shortuuid.uuid()
+    req_obj = Requests(logger, uuid)
     for task in tasks:
         req_obj.perform_task(task)
 
 
-def start_load_test():
-    start_time = time.time()
-    end_time = time.time() + 180
+def start_load_test(logger, lambd, runtime):
+    end_time = time.time() + runtime
     while time.time() < end_time:
-        thread = threading.Thread(target=user_tasks)
+        # gevent.spawn(user_tasks, logger, str(total_user))
+        thread = threading.Thread(target=user_tasks, args=(logger, str(total_user)))
         thread.start()
-        next_arrival = random.expovariate(1 / 20)
+        next_arrival = random.expovariate(1 / lambd)
         time.sleep(next_arrival / 1000.0)
+        # print(next_arrival)
 
     main_thread = threading.current_thread()
     for x in threading.enumerate():
         if x is main_thread:
             continue
         x.join()
-    print("Finish Testing")
+
+
+if __name__ == '__main__':
+    arrival_rate = int(sys.argv[1])
+    runtime = int(sys.argv[2])
+    file_name = sys.argv[3]
+    logger = setup_logger(file_name)
+    start_time = time.time()
+    print("Start Testing with arrival rate - %s ms, runtime--%s s at %s" % (arrival_rate, runtime, datetime.now()))
+
+    start_load_test(logger, arrival_rate, runtime)
+
+    print("Finish Testing at %s, Total User Spawned - %s" % (datetime.now(), total_user))
     print("Elapsed Time: ", time.time() - start_time)
-
-
-start_load_test()

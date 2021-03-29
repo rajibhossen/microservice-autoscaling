@@ -12,26 +12,92 @@ plt.figure(figsize=(10, 6))
 
 
 def log_processor():
-    service_name = "pay"
-    stats_file = "logs/data_p20.log"
-    main_df = pd.read_csv(stats_file, parse_dates=["arrival_time"], index_col="arrival_time")
+    service_name = "finish_booking"
+    # stats_file = "load_data/data_p20_t5.log"
+    # main_df = pd.read_csv(stats_file, parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 10000))
+    # main_df.sort_index(inplace=True)
 
-    df = main_df.loc[main_df["service"] == service_name]
+    df_1 = pd.read_csv("load_data/data_p65_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time",
+                       skiprows=range(1, 4000))
+    df_2 = pd.read_csv("load_data/data_p65_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time",
+                       skiprows=range(1, 4000))
+    df_3 = pd.read_csv("load_data/data_p60_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time",
+                       skiprows=range(1, 1000))
+    df_4 = pd.read_csv("load_data/data_p60_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time",
+                       skiprows=range(1, 1000))
+    df_5 = pd.read_csv("load_data/data_p55_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time",
+                       skiprows=range(1, 1000))
+    df_6 = pd.read_csv("load_data/data_p55_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time",
+                       skiprows=range(1, 1000))
+    df_7 = pd.read_csv("load_data/data_p50_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_8 = pd.read_csv("load_data/data_p50_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_9 = pd.read_csv("load_data/data_p45_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_10 = pd.read_csv("load_data/data_p45_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_11 = pd.read_csv("load_data/data_p40_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_12 = pd.read_csv("load_data/data_p40_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_13 = pd.read_csv("load_data/data_p35_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_14 = pd.read_csv("load_data/data_p35_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_15 = pd.read_csv("load_data/data_p30_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_16 = pd.read_csv("load_data/data_p30_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_17 = pd.read_csv("load_data/data_p25_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_18 = pd.read_csv("load_data/data_p25_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_19 = pd.read_csv("load_data/data_p20_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    df_20 = pd.read_csv("load_data/data_p20_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
 
-    sample_average = df.response_time.resample(rule='10s').mean()
-    sample_percentile = df.response_time.resample(rule='10s').quantile(0.99)
-    sample_count = df.response_time.resample(rule='10s').count()
-    average_latency = [x * 1000 for x in sample_average]
-    percentile_99 = [x * 1000 for x in sample_percentile]
-    rps = [x / 10.0 for x in sample_count]
-    plt.scatter(rps, average_latency, label="Average")
-    plt.scatter(rps, percentile_99, label="99 Percentile")
+    # dfs = []
+    # for rate in [65, 60, 55, 50, 45, 40, 35, 30, 25, 20]:
+    #     for i in range(1, 3):
+    #         df = pd.read_csv("load_data/data_p" + str(rate) + "_t2_" + str(i) + ".log", parse_dates=["arrival_time"],
+    #                          index_col="arrival_time")
+    #         dfs.append(df)
+
+    # main_df.sort_index(inplace=True)
+    df1 = pd.concat([df_1, df_2])
+    df2 = pd.concat([df_3, df_4])
+    df3 = pd.concat([df_5, df_6])
+    df4 = pd.concat([df_7, df_8])
+    df5 = pd.concat([df_9, df_10])
+    df6 = pd.concat([df_11, df_12])
+    df7 = pd.concat([df_13, df_14])
+    df8 = pd.concat([df_15, df_16])
+    df9 = pd.concat([df_17, df_18])
+    df10 = pd.concat([df_19, df_20])
+    rpss = []
+    avgs = []
+    percentiles = []
+    # df2, df3, df4, df5, df6, df7, df8, df9,df10
+    for temp in [df1, df2, df3, df4, df5, df6, df7, df8, df9, df10]:
+
+        df = temp.loc[temp["service"] == service_name]
+
+        sample_average = df.response_time.resample(rule='30s').mean()
+        sample_percentile = df.response_time.resample(rule='30s').quantile(0.99)
+        sample_count = df.response_time.resample(rule='30s').count()
+        average_latency = [x * 1000 for x in sample_average]
+        percentile_99 = [x * 1000 for x in sample_percentile]
+        rps = [x / 30.0 for x in sample_count]
+        for x in average_latency:
+            avgs.append(x)
+        for x in rps:
+            rpss.append(x)
+        for x in percentile_99:
+            percentiles.append(x)
+    # print(rps)
+    # print(average_latency)
+    # print(rpss)
+    # print(avgs)
+    plt.scatter(rpss, avgs, label="Average Latency")
+    plt.scatter(rpss, percentiles, label="99 Percentile")
     # plt.plot(average_latency)
+    # plt.plot(rps)
     # plt.plot(percentile_99)
-    plt.legend()
+    plt.ylim(0, 3000)
+    #plt.xlim(15, 50)
+    plt.legend(loc="upper left")
     plt.xlabel("RPS")
     plt.ylabel("Response Time (ms)")
     plt.title(service_name)
+    #plt.savefig("figures/" + service_name + "_10s.jpeg")
     plt.show()
 
 
@@ -53,24 +119,15 @@ def parse_data():
 
 def interarrival():
     service_name = "search_ticket"
-    stats_file = "load_test_data.log"
-    main_df = pd.read_csv(stats_file, header=None)
+    stats_file = "load_data/data_p60_t2_2.log"
+    main_df = pd.read_csv(stats_file)
     # print(main_df.head())
 
-    df = main_df.loc[main_df[3] == service_name]
-    data = []
-    # for index, row in df.iterrows():
-    #     data.append((row[0], float(row[3])))
-    for index, row in df.iterrows():
-        data.append(row[2])
-    # print(data)
+    df = main_df.loc[main_df["service"] == service_name]
     arrival_times = []
-    # subtract response time from datetime to get the arrival times
-    for i in range(len(data) - 1):
-        response_time = datetime.strptime(data[i], "%Y-%m-%d %H:%M:%S.%f")
-        # duration = timedelta(milliseconds=data[i][1])
-        # arrival_times.append(response_time - duration)
-        arrival_times.append(response_time)
+    for index, row in df.iterrows():
+        arrival_times.append(datetime.strptime(row["arrival_time"], "%Y-%m-%d %H:%M:%S.%f"))
+
     arrival_times = sorted(arrival_times)
     print(arrival_times)
     interarrival_times = []
@@ -86,8 +143,9 @@ def draw_pmf(data):
     heights, bins = np.histogram(data, bins=50)
     heights = heights / sum(heights)
     plt.bar(bins[:-1], heights, width=(max(bins) - min(bins)) / len(bins), color="green", alpha=0.7)
-    # plt.title("Food service PMF")
-    # plt.savefig("output/foods_pmf.jpeg", bbox_inches="tight")
+    plt.title("Search Ticket PMF")
+    plt.xlabel("Inter Arrival Time (ms)")
+    plt.savefig("figures/search_ticket_pmf.jpeg", bbox_inches="tight")
     plt.show()
 
 
@@ -121,8 +179,8 @@ def draw_data():
 # parse_data()
 # plot_latency()
 # plot_request_arrival()
-# data = interarrival()
-# print(data)
-# draw_pmf(data)
+#data = interarrival()
+#print(data)
+#draw_pmf(data)
 # draw_data()
 log_processor()
