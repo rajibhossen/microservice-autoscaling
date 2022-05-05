@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-stress
+  labels:
+    app: stress
+spec:
+  selector:
+    matchLabels:
+      stress-area: here
+  replicas: 5
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        stress-area: here
+    spec:
+      containers:
+      - name: container-stress
+        image: mohsenmottaghi/container-stress:latest
+        command: ["stress", "--verbose", "--cpu", "12", "--timeout", "80m"]
+        resources:
+          requests:
+            memory: "1000Mi"
+            cpu: "12000m"

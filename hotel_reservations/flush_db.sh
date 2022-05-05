@@ -1,0 +1,1 @@
+kubectl exec mongodb-reservation-74565949fd-tn86g -- mongo reservation-db --eval "db.reservation.remove({})"

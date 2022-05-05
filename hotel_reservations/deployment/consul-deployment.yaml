@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: consul
+  name: consul
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: consul
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: consul
+    spec:
+      containers:
+        - image: consul:latest
+          name: consul
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8300
+            - containerPort: 8400
+            - containerPort: 8500
+            - containerPort: 53
+              protocol: UDP
+          resources:
+            requests:
+              cpu: 1000m
+      restartPolicy: Always
+status: {}

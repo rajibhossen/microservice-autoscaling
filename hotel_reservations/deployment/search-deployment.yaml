@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: search
+  name: search
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: search
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: search
+    spec:
+      containers:
+        - command:
+            - search
+          image: rajibhossen/hotel_reserv_search_single_node
+          name: hotel-reserv-search
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          resources:
+            limits:
+              cpu: 1500m
+      restartPolicy: Always
+status: {}

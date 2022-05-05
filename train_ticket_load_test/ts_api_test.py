@@ -220,7 +220,7 @@ def random_string_generator():
     return random_string
 
 
-class AdminActions():
+class AdminActions:
     def __init__(self):
         self.admin_user = "admin"
         self.admin_pwd = "222222"
@@ -246,24 +246,35 @@ class AdminActions():
         response = requests.get(url=self.host + "/api/v1/adminuserservice/users",
                                 headers=head,
                                 )
+        return response.text
+
+    def delete_user(self, userid):
+        head = {"Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": self.bearer}
+        response = requests.delete(url=self.host + "/api/v1/adminuserservice/users/" + userid, headers=head)
         print(response.text)
 
     def create_users(self):
-        for username in USER_CREDETIALS:
-            # username = random_string_generator()
-            # print(username)
-            payload = {"userName": username, "password": username, "gender": "1", "email": username + "@abc.com",
-                       "documentType": "1", "documentNum": "1234567890"}
-            head = {"Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": self.bearer}
-            response = requests.post(url=self.host + "/api/v1/adminuserservice/users",
-                                     headers=head,
-                                     json=payload)
-            if response.json()["status"] == 1:
-                self.user_credentials.append(username)
-                print(response.text)
-        print(self.user_credentials)
+        if random.uniform(0, 1) <= 0.5:
+            if self.user_credentials:
+                return random.choice(self.user_credentials)
+        # for username in USER_CREDETIALS:
+        username = random_string_generator()
+        # print(username)
+        payload = {"userName": username, "password": username, "gender": "1", "email": username + "@abc.com",
+                   "documentType": "1", "documentNum": "1234567890"}
+        head = {"Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": self.bearer}
+        response = requests.post(url=self.host + "/api/v1/adminuserservice/users",
+                                 headers=head,
+                                 json=payload)
+        if response.json()["status"] == 1:
+            self.user_credentials.append(username)
+            # print(response.text)
+            return username
+        # print(self.user_credentials)
 
     def get_all_orders(self):
         head = {"Accept": "application/json",
@@ -278,8 +289,27 @@ class AdminActions():
         head = {"Accept": "application/json",
                 "Content-Type": "application/json",
                 "Authorization": self.bearer}
-        response = requests.delete(url=self.host + "/api/v1/adminorderservice/adminorder/" + orderid + "/" + trainNumber,
-                                   headers=head)
+        response = requests.delete(
+            url=self.host + "/api/v1/adminorderservice/adminorder/" + orderid + "/" + trainNumber,
+            headers=head)
+        print(response.text)
+
+    def get_contacts(self):
+        head = {"Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": self.bearer}
+        response = requests.get(url=self.host + "/api/v1/contactservice/contacts",
+                                headers=head,
+                                )
+        return response.text
+
+    def delete_contact(self, id):
+        head = {"Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": self.bearer}
+        response = requests.delete(
+            url=self.host + "/api/v1/contactservice/contacts/" + id,
+            headers=head)
         print(response.text)
 
 
@@ -291,7 +321,7 @@ def basic_api_test():
     # print(from_station, to_station, dep)
     api_test = ApiTest()
     api_test.login()
-    #api_test.select_contact()
+    # api_test.select_contact()
     # api_test.search_ticket(dep, from_station, to_station)
     # api_test.get_foods()
     # api_test.finish_booking(dep)
@@ -303,17 +333,28 @@ def basic_api_test():
 
 def admin_api_test():
     admin_api = AdminActions()
-    admin_api.create_users()
-    # orders = admin_api.get_all_orders()
-    # orders = json.loads(orders)
-    # #print(orders[])
-    # for order in orders["data"]:
-    #     # print(order)
-    #     #print(order["id"], order["trainNumber"])
-    #     admin_api.delete_orders(order["id"], order["trainNumber"])
-    #     # break
+    # admin_api.create_users()
+    users = admin_api.get_users()
+    users = json.loads(users)
+    print("Deleting %s Users" % len(users["data"]))
+    for user in users["data"]:
+       admin_api.delete_user(user["userId"])
+    orders = admin_api.get_all_orders()
+    orders = json.loads(orders)
+    for order in orders["data"]:
+        #print(order)
+        #print(order["id"], order["trainNumber"])
+        admin_api.delete_orders(order["id"], order["trainNumber"])
+        #break
+    contacts = admin_api.get_contacts()
+    # print(contacts)
+    contacts = json.loads(contacts)
+    for contact in contacts["data"]:
+        admin_api.delete_contact(contact["id"])
+        # print(contact)
+    # print(json.loads(foods))
 
 
 if __name__ == '__main__':
-    #basic_api_test()
+    # basic_api_test()
     admin_api_test()

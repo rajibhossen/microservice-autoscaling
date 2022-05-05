@@ -1,37 +1,14 @@
-import sys
-from action_execution.tasks import limit_cpu, limit_memory, test_task
-from prometheus_data import get_metrics_data
-from trace_data import jaeger_tracing
+from action_manager import SshClient
 
 
-def apply_actions():
-    pod_id = "/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod18784738_89c2_4589_b827_359b24966eb7.slice"
-    # pod_id
-    cpu_value = 1
-    memory_value = 1048576
-    a = 2
-    b = 3
-    node = "ridlserver06"
+def apply_cpu_resource(pod_id, node, cpu):
+    client = SshClient("ridl:ridl123@%s" % node)
+    result = client.execute(
+        "python3 /home/ridl/rajibs_work/mba/action_execution/cpu_scaling.py %s %s " % (pod_id, round(cpu, 2)),
+        sudo=True)
+    print(result)
 
-    if node == "ridlserver06":
-        result = limit_memory.apply_async((pod_id, memory_value), queue='wrk06')
-        print(result.get())
-    elif node == "ridlserver07":
-        result = limit_cpu.apply_async((a, b), queue='wrk07')
-        print(result.get())
-    elif node == "ridlserver08":
-        result = limit_cpu.apply_async((a, b), queue='wrk08')
-        print(result.get())
-    elif node == "ridlserver09":
-        result = limit_cpu.apply_async((a, b), queue="work09")
-        print(result.get())
-    elif node == "ridlserver10":
-        result = limit_memory.apply_async((a, b), queue="wrk10")
-        print(result.get())
-    else:
-        print("Invalid Node")
-
-
-if __name__ == '__main__':
-    system_data = get_metrics_data()
-    trace_data = jaeger_tracing()
+# id = "/kubepods.slice/kubepods-pod71efdf1e_edae_4c96_91a1_59cb53a2de4e.slice/docker-d49bdd6cf252a1a431cc12c73c9fb4634493000a9ff6b1ac2d647becc569f892.scope"
+# node = "ridlserver10"
+# cpu = 200000
+# apply_cpu_resource(id, node, cpu)

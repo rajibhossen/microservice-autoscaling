@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: geo
+  name: geo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: geo
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: geo
+    spec:
+      containers:
+        - command:
+            - geo
+          image: rajibhossen/hotel_reserv_geo_single_node
+          name: hotel-reserv-geo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8083
+          resources:
+            limits:
+              cpu: 1500m
+      restartPolicy: Always
+status: {}

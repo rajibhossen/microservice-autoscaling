@@ -1,4 +1,6 @@
 import csv
+import itertools
+import os
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -7,98 +9,208 @@ import numpy as np
 from datetime import datetime
 from datetime import timedelta
 import collections
+from statistics import median
 
 plt.figure(figsize=(10, 6))
 
 
+def load_data_files(profile, flag):
+    """
+    load csv files as panda dataframes
+    :return: list
+    """
+
+    # path = "load_data/rps_350_slo_2k/"
+    config = "interpolated_corrected/"
+
+    iter1 = "/data_p25_t2_1.log"
+    iter2 = "/data_p25_t2_2.log"
+
+    path1 = "load_data/combine_rps_slo/" + profile
+    path2 = "load_data/" + config + profile
+
+    df_1 = pd.read_csv(path2 + iter1, parse_dates=["arrival_time"],
+                       index_col="arrival_time")
+    df_2 = pd.read_csv(path2 + iter2, parse_dates=["arrival_time"],
+                       index_col="arrival_time")
+
+    df1 = pd.concat([df_1, df_2])
+    return [df_1, df_2]
+    # return [df1]
+    # if flag:
+    #     es_60 = pd.read_csv("load_data/" + profile + "/es_data_p60_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     es_55 = pd.read_csv("load_data/" + profile + "/es_data_p55_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     es_50 = pd.read_csv("load_data/" + profile + "/es_data_p50_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     es_45 = pd.read_csv("load_data/" + profile + "/es_data_p45_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     es_40 = pd.read_csv("load_data/" + profile + "/es_data_p40_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     es_35 = pd.read_csv("load_data/" + profile + "/es_data_p35_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     es_30 = pd.read_csv("load_data/" + profile + "/es_data_p30_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     es_25 = pd.read_csv("load_data/" + profile + "/es_data_p25_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     es_65 = pd.read_csv("load_data/" + profile + "/es_data_p65_t2_all.csv", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time")
+    #     return [es_65, es_60, es_55, es_50, es_45, es_40, es_35, es_30, es_25]
+    #     # return [es_30]
+    # else:
+    #     df_1 = pd.read_csv("load_data/" + profile + "/data_p60_t2_1.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_2 = pd.read_csv("load_data/" + profile + "/data_p60_t2_2.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_3 = pd.read_csv("load_data/" + profile + "/data_p55_t2_1.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_4 = pd.read_csv("load_data/" + profile + "/data_p55_t2_2.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_5 = pd.read_csv("load_data/" + profile + "/data_p50_t2_1.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_6 = pd.read_csv("load_data/" + profile + "/data_p50_t2_2.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_7 = pd.read_csv("load_data/" + profile + "/data_p45_t2_1.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_8 = pd.read_csv("load_data/" + profile + "/data_p45_t2_2.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_9 = pd.read_csv("load_data/" + profile + "/data_p40_t2_1.log", parse_dates=["arrival_time"],
+    #                        index_col="arrival_time", skiprows=range(1, 400))
+    #     df_10 = pd.read_csv("load_data/" + profile + "/data_p40_t2_2.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     df_11 = pd.read_csv("load_data/" + profile + "/data_p35_t2_1.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     df_12 = pd.read_csv("load_data/" + profile + "/data_p35_t2_2.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     df_13 = pd.read_csv("load_data/" + profile + "/data_p30_t2_1.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     df_14 = pd.read_csv("load_data/" + profile + "/data_p30_t2_2.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     df_15 = pd.read_csv("load_data/" + profile + "/data_p25_t2_1.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     df_16 = pd.read_csv("load_data/" + profile + "/data_p25_t2_2.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     df_17 = pd.read_csv("load_data/" + profile + "/data_p65_t2_1.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     df_18 = pd.read_csv("load_data/" + profile + "/data_p65_t2_2.log", parse_dates=["arrival_time"],
+    #                         index_col="arrival_time", skiprows=range(1, 400))
+    #     # main_df.sort_index(inplace=True)
+    #     df1 = pd.concat([df_1, df_2])
+    #     df2 = pd.concat([df_3, df_4])
+    #     df3 = pd.concat([df_5, df_6])
+    #     df4 = pd.concat([df_7, df_8])
+    #     df5 = pd.concat([df_9, df_10])
+    #     df6 = pd.concat([df_11, df_12])
+    #     df7 = pd.concat([df_13, df_14])
+    #     df8 = pd.concat([df_15, df_16])
+    #     df9 = pd.concat([df_17, df_18])
+    #     # df1, df2, df3, df4, df5, df6,
+    #     # return [df4,df5,df6]
+    #     return [df1, df2, df3, df4, df5, df6, df7, df8, df9]
+
+
+def end_to_end():
+    service_name = "Overall"
+    # "profile_600_75", "profile_600_125", "profile_600_150", "profile_600_200"
+    for profile in ["profile_s1000_r350_25", "profile_s1100_r350_25"]:
+        rpss = []
+        avgs = []
+        percentiles = []
+        plt.figure(figsize=(10, 6))
+        for p in [profile + '_1', profile + '_2', profile + '_3', profile + '_4', profile + '_5']:
+
+            x = []
+            responses = []
+            # if flag true, return elasticsearch data, otherwise return laod generator data
+            data_files = load_data_files(profile=p, flag=False)
+            for temp in data_files:
+                # df = temp.loc[temp["service"] == service_name]
+                df = temp
+
+                df1 = df.groupby("user")["response_time"].agg(["count", "sum"])
+                # x = df1["count"].sum() / 180.0  # 180s experiemnt
+                # y1 = df1["sum"].mean()
+                # y2 = df1["sum"].quantile(0.95)
+                x.append(df1["count"].sum())
+                for a in df1["sum"].values:
+                    responses.append(a)
+            #print(responses)
+            rpss.append(sum(x) / 180.0)
+            avgs.append((sum(responses) / len(responses)) * 1000)
+            percentile = np.percentile(np.array(responses), 95)
+            percentiles.append(percentile * 1000)
+
+
+        #xs, ys = zip(*sorted(zip(rpss, avgs)))
+        #_, zs = zip(*sorted(zip(rpss, percentiles)))
+        xs, ys, zs = rpss, avgs, percentiles
+
+        print(profile)
+        print(xs)
+        print(zs)
+
+        plt.scatter(xs, ys, label="Average Latency", marker="^", zorder=3)
+        plt.scatter(xs, zs, label="95 Percentile", marker="x", zorder=3)
+
+        plt.legend()
+        plt.xlabel("RPS")
+        plt.ylabel("Response Time (ms)")
+        plt.title(service_name + " - " + profile)
+        plt.grid(linestyle='dotted', zorder=0)
+        plt.ylim(0, 3000)
+        # plt.xlim(175, 375)
+        # plt.savefig("figures/" + service_name + "_"+profile+"_180s.jpeg")
+        plt.show()
+        #break
+
+
 def log_processor():
     service_name = "finish_booking"
-    # stats_file = "load_data/data_p20_t5.log"
-    # main_df = pd.read_csv(stats_file, parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 10000))
-    # main_df.sort_index(inplace=True)
 
-    df_1 = pd.read_csv("load_data/data_p65_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time",
-                       skiprows=range(1, 4000))
-    df_2 = pd.read_csv("load_data/data_p65_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time",
-                       skiprows=range(1, 4000))
-    df_3 = pd.read_csv("load_data/data_p60_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time",
-                       skiprows=range(1, 1000))
-    df_4 = pd.read_csv("load_data/data_p60_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time",
-                       skiprows=range(1, 1000))
-    df_5 = pd.read_csv("load_data/data_p55_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time",
-                       skiprows=range(1, 1000))
-    df_6 = pd.read_csv("load_data/data_p55_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time",
-                       skiprows=range(1, 1000))
-    df_7 = pd.read_csv("load_data/data_p50_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_8 = pd.read_csv("load_data/data_p50_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_9 = pd.read_csv("load_data/data_p45_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_10 = pd.read_csv("load_data/data_p45_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_11 = pd.read_csv("load_data/data_p40_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_12 = pd.read_csv("load_data/data_p40_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_13 = pd.read_csv("load_data/data_p35_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_14 = pd.read_csv("load_data/data_p35_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_15 = pd.read_csv("load_data/data_p30_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_16 = pd.read_csv("load_data/data_p30_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_17 = pd.read_csv("load_data/data_p25_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_18 = pd.read_csv("load_data/data_p25_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_19 = pd.read_csv("load_data/data_p20_t2_1.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
-    df_20 = pd.read_csv("load_data/data_p20_t2_2.log", parse_dates=["arrival_time"], index_col="arrival_time", skiprows=range(1, 1000))
+    # profile = "profile1"
+    for profile in ["profile3", "profile15", "profile16", "profile17", "profile12"]:
+        rpss = []
+        avgs = []
+        percentiles = []
+        plt.figure(figsize=(10, 6))
+        for p in [profile + '_1', profile + '_2', profile + '_3', profile + '_4', profile + '_5']:
+            rule = '1s'
+            # if flag true, return elasticsearch data, otherwise return laod generator data
+            data_files = load_data_files(profile=p, flag=False)
+            for temp in data_files:
+                # df = temp.loc[temp["service"] == service_name]
+                df = temp
 
-    # dfs = []
-    # for rate in [65, 60, 55, 50, 45, 40, 35, 30, 25, 20]:
-    #     for i in range(1, 3):
-    #         df = pd.read_csv("load_data/data_p" + str(rate) + "_t2_" + str(i) + ".log", parse_dates=["arrival_time"],
-    #                          index_col="arrival_time")
-    #         dfs.append(df)
+                sample_count = df.response_time.resample(rule=rule).count()
+                sample_average = df.response_time.resample(rule=rule).mean()
+                sample_percentile = df.response_time.resample(rule=rule).quantile(0.95)
+                x = sum(sample_count) / (len(sample_count) * 1)
+                y1 = sum(sample_average) / len(sample_average)
+                y2 = sum(sample_percentile) / len(sample_percentile)
+                avgs.append(y1 * 1000)
+                rpss.append(int(x))
+                percentiles.append(y2 * 1000)
 
-    # main_df.sort_index(inplace=True)
-    df1 = pd.concat([df_1, df_2])
-    df2 = pd.concat([df_3, df_4])
-    df3 = pd.concat([df_5, df_6])
-    df4 = pd.concat([df_7, df_8])
-    df5 = pd.concat([df_9, df_10])
-    df6 = pd.concat([df_11, df_12])
-    df7 = pd.concat([df_13, df_14])
-    df8 = pd.concat([df_15, df_16])
-    df9 = pd.concat([df_17, df_18])
-    df10 = pd.concat([df_19, df_20])
-    rpss = []
-    avgs = []
-    percentiles = []
-    # df2, df3, df4, df5, df6, df7, df8, df9,df10
-    for temp in [df1, df2, df3, df4, df5, df6, df7, df8, df9, df10]:
+        xs, ys = zip(*sorted(zip(rpss, avgs)))
+        _, zs = zip(*sorted(zip(rpss, percentiles)))
+        print(profile)
+        print(xs)
+        print(zs)
 
-        df = temp.loc[temp["service"] == service_name]
+        plt.scatter(xs, ys, label="Average Latency", marker="^", zorder=3)
+        plt.scatter(xs, zs, label="95 Percentile", marker="x", zorder=3)
 
-        sample_average = df.response_time.resample(rule='30s').mean()
-        sample_percentile = df.response_time.resample(rule='30s').quantile(0.99)
-        sample_count = df.response_time.resample(rule='30s').count()
-        average_latency = [x * 1000 for x in sample_average]
-        percentile_99 = [x * 1000 for x in sample_percentile]
-        rps = [x / 30.0 for x in sample_count]
-        for x in average_latency:
-            avgs.append(x)
-        for x in rps:
-            rpss.append(x)
-        for x in percentile_99:
-            percentiles.append(x)
-    # print(rps)
-    # print(average_latency)
-    # print(rpss)
-    # print(avgs)
-    plt.scatter(rpss, avgs, label="Average Latency")
-    plt.scatter(rpss, percentiles, label="99 Percentile")
-    # plt.plot(average_latency)
-    # plt.plot(rps)
-    # plt.plot(percentile_99)
-    plt.ylim(0, 3000)
-    #plt.xlim(15, 50)
-    plt.legend(loc="upper left")
-    plt.xlabel("RPS")
-    plt.ylabel("Response Time (ms)")
-    plt.title(service_name)
-    #plt.savefig("figures/" + service_name + "_10s.jpeg")
-    plt.show()
+        plt.legend()
+        plt.xlabel("RPS")
+        plt.ylabel("Response Time (ms)")
+        plt.title(service_name + " - " + profile)
+        plt.grid(linestyle='dotted', zorder=0)
+        # plt.ylim(0, 700)
+        # plt.xlim(175, 375)
+        # plt.savefig("figures/" + service_name + "_"+profile+"_180s.jpeg")
+        plt.show()
+        break
 
 
 def parse_data():
@@ -179,8 +291,11 @@ def draw_data():
 # parse_data()
 # plot_latency()
 # plot_request_arrival()
-#data = interarrival()
-#print(data)
-#draw_pmf(data)
+# data = interarrival()
+# print(data)
+# draw_pmf(data)
 # draw_data()
-log_processor()
+
+# log_processor()
+end_to_end()
+# compare_estimator()

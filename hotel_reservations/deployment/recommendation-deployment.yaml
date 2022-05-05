@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: recommendation
+  name: recommendation
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: recommendation
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: recommendation
+    spec:
+      containers:
+        - command:
+            - recommendation
+          image: rajibhossen/hotel_reserv_recommendation_single_node
+          name: hotel-reserv-recommendation
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8085
+          resources:
+            limits:
+              cpu: 1500m
+      restartPolicy: Always
+status: {}

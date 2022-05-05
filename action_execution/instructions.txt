@@ -1,0 +1,5 @@
+## How to run
+Start RabbitMQ
+$ docker run -d -p 5672:5672 rabbitmq
+# start celery worker
+$ celery -A action_execution worker -Q wrk06 -l INFO --detach

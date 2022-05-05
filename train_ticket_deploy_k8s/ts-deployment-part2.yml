@@ -30,9 +30,8 @@ spec:
             port: 18767
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5   
+          timeoutSeconds: 5
 ---
-
 
 apiVersion: apps/v1
 kind: Deployment
@@ -164,8 +163,8 @@ spec:
             cpu: 50m
             memory: 160Mi
           limits:
-            cpu: 200m
-            memory: 500Mi
+            cpu: 1000m
+            memory: 1000Mi
         readinessProbe:
           tcpSocket:
             port: 16115
@@ -173,7 +172,6 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -182,7 +180,7 @@ spec:
   selector:
     matchLabels:
       app: ts-assurance-service
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -195,12 +193,9 @@ spec:
         ports:
         - containerPort: 18888
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1300Mi
+            cpu: 2000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 18888
@@ -217,7 +212,7 @@ spec:
   selector:
     matchLabels:
       app: ts-basic-service
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -230,12 +225,9 @@ spec:
         ports:
         - containerPort: 15680
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 2000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 15680
@@ -265,11 +257,8 @@ spec:
         ports:
         - containerPort: 18885
         resources:
-          requests:
-            cpu: 500m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
+            cpu: 1000m
             memory: 1500Mi
         readinessProbe:
           tcpSocket:
@@ -278,7 +267,6 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -300,11 +288,8 @@ spec:
         ports:
         - containerPort: 15679
         resources:
-          requests:
-            cpu: 500m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
+            cpu: 2500m
             memory: 1500Mi
         readinessProbe:
           tcpSocket:
@@ -335,12 +320,9 @@ spec:
         ports:
         - containerPort: 16110
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 2000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 16110
@@ -357,7 +339,7 @@ spec:
   selector:
     matchLabels:
       app: ts-consign-service
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -370,12 +352,9 @@ spec:
         ports:
         - containerPort: 16111
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 2000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 16111
@@ -392,7 +371,7 @@ spec:
   selector:
     matchLabels:
       app: ts-contacts-service
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -405,18 +384,15 @@ spec:
         ports:
         - containerPort: 12347
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 2500m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 12347
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -427,7 +403,7 @@ spec:
   selector:
     matchLabels:
       app: ts-execute-service
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -440,12 +416,9 @@ spec:
         ports:
         - containerPort: 12386
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 1000m
+            memory: 1000Mi
         readinessProbe:
           tcpSocket:
             port: 12386
@@ -475,12 +448,9 @@ spec:
         ports:
         - containerPort: 18855
         resources:
-          requests:
-            cpu: 500m
-            memory: 1024Mi
           limits:
-            cpu: 1024m
-            memory: 1500Mi
+            cpu: 2000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 18855
@@ -510,12 +480,9 @@ spec:
         ports:
         - containerPort: 18856
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 2500m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 18856
@@ -532,7 +499,7 @@ spec:
   selector:
     matchLabels:
       app: ts-inside-payment-service
-  replicas: 5
+  replicas: 1
   template:
     metadata:
       labels:
@@ -545,12 +512,9 @@ spec:
         ports:
         - containerPort: 18673
         resources:
-          requests:
-            cpu: 4000m
-            memory: 4000Mi
           limits:
-            cpu: 4500m
-            memory: 4500Mi
+            cpu: 1500m
+            memory: 2000Mi
         readinessProbe:
           tcpSocket:
             port: 18673
@@ -567,7 +531,7 @@ spec:
   selector:
     matchLabels:
       app: ts-auth-service
-  replicas: 5
+  replicas: 3
   template:
     metadata:
       labels:
@@ -580,18 +544,15 @@ spec:
         ports:
         - containerPort: 12340
         resources:
-          requests:
-            cpu: 3000m
-            memory: 2000Mi
           limits:
             cpu: 3500m
-            memory: 2500Mi
+            memory: 2548Mi
         readinessProbe:
           tcpSocket:
             port: 12340
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -615,12 +576,9 @@ spec:
         ports:
         - containerPort: 12862
         resources:
-          requests:
-            cpu: 50m
-            memory: 160Mi
           limits:
-            cpu: 200m
-            memory: 500Mi
+            cpu: 1000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 12862
@@ -650,12 +608,9 @@ spec:
         ports:
         - containerPort: 17853
         resources:
-          requests:
-            cpu: 50m
-            memory: 160Mi
           limits:
-            cpu: 200m
-            memory: 500Mi
+            cpu: 1000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 17853
@@ -685,12 +640,9 @@ spec:
         ports:
         - containerPort: 12032
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1300Mi
+            cpu: 2500m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 12032
@@ -707,7 +659,7 @@ spec:
   selector:
     matchLabels:
       app: ts-order-service
-  replicas: 5
+  replicas: 2
   template:
     metadata:
       labels:
@@ -720,12 +672,9 @@ spec:
         ports:
         - containerPort: 12031
         resources:
-          requests:
-            cpu: 3500m
-            memory: 3500Mi
           limits:
-            cpu: 4096m
-            memory: 4096Mi
+            cpu: 2500m
+            memory: 2000Mi
         readinessProbe:
           tcpSocket:
             port: 12031
@@ -755,18 +704,15 @@ spec:
         ports:
         - containerPort: 19001
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1200Mi
+            cpu: 1000m
+            memory: 1000Mi
         readinessProbe:
           tcpSocket:
             port: 19001
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -790,12 +736,9 @@ spec:
         ports:
         - containerPort: 14569
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 2000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 14569
@@ -812,7 +755,7 @@ spec:
   selector:
     matchLabels:
       app: ts-preserve-service
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
@@ -825,12 +768,9 @@ spec:
         ports:
         - containerPort: 14568
         resources:
-          requests:
-            cpu: 1500m
-            memory: 1500Mi
           limits:
             cpu: 2000m
-            memory: 2000Mi
+            memory: 1500Mi
         readinessProbe:
           tcpSocket:
             port: 14568
@@ -860,12 +800,9 @@ spec:
         ports:
         - containerPort: 16579
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1300Mi
+            cpu: 2500m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 16579
@@ -895,18 +832,15 @@ spec:
         ports:
         - containerPort: 18886
         resources:
-          requests:
-            cpu: 50m
-            memory: 160Mi
           limits:
-            cpu: 200m
-            memory: 500Mi
+            cpu: 1000m
+            memory: 1000Mi
         readinessProbe:
           tcpSocket:
             port: 18886
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -930,11 +864,8 @@ spec:
         ports:
         - containerPort: 14578
         resources:
-          requests:
-            cpu: 500m
-            memory: 800Mi
           limits:
-            cpu: 1024m
+            cpu: 2000m
             memory: 1024Mi
         readinessProbe:
           tcpSocket:
@@ -965,18 +896,15 @@ spec:
         ports:
         - containerPort: 11178
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 2000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 11178
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -987,7 +915,7 @@ spec:
   selector:
     matchLabels:
       app: ts-seat-service
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
@@ -1000,18 +928,15 @@ spec:
         ports:
         - containerPort: 18898
         resources:
-          requests:
-            cpu: 1500m
-            memory: 1500Mi
           limits:
-            cpu: 2048m
-            memory: 2048Mi
+            cpu: 2500m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 18898
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -1022,7 +947,7 @@ spec:
   selector:
     matchLabels:
       app: ts-security-service
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
@@ -1035,12 +960,9 @@ spec:
         ports:
         - containerPort: 11188
         resources:
-          requests:
-            cpu: 2048m
-            memory: 3072Mi
           limits:
             cpu: 2500m
-            memory: 3500Mi
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 11188
@@ -1070,18 +992,15 @@ spec:
         ports:
         - containerPort: 12342
         resources:
-          requests:
-            cpu: 500m
-            memory: 800Mi
           limits:
-            cpu: 1024m
+            cpu: 2000m
             memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 12342
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -1092,7 +1011,7 @@ spec:
   selector:
     matchLabels:
       app: ts-station-service
-  replicas: 5
+  replicas: 2
   template:
     metadata:
       labels:
@@ -1105,12 +1024,9 @@ spec:
         ports:
         - containerPort: 12345
         resources:
-          requests:
-            cpu: 1500m
-            memory: 1500Mi
           limits:
-            cpu: 2048m
-            memory: 2048Mi
+            cpu: 2500m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 12345
@@ -1131,7 +1047,7 @@ spec:
   template:
     metadata:
       labels:
-        app: ts-ticket-office-service 
+        app: ts-ticket-office-service
     spec:
       containers:
       - name: ts-ticket-office-service
@@ -1140,18 +1056,15 @@ spec:
         ports:
         - containerPort: 16108
         resources:
-          requests:
-            cpu: 50m
-            memory: 160Mi
           limits:
-            cpu: 200m
+            cpu: 1000m
             memory: 500Mi
         readinessProbe:
           tcpSocket:
             port: 16108
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -1175,18 +1088,15 @@ spec:
         ports:
         - containerPort: 15681
         resources:
-          requests:
-            cpu: 1024m
-            memory: 800Mi
           limits:
-            cpu: 1500m
+            cpu: 3000m
             memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 15681
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -1197,7 +1107,7 @@ spec:
   selector:
     matchLabels:
       app: ts-train-service
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -1210,18 +1120,15 @@ spec:
         ports:
         - containerPort: 14567
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1024Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 3000m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 14567
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -1232,7 +1139,7 @@ spec:
   selector:
     matchLabels:
       app: ts-travel2-service
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
@@ -1245,12 +1152,9 @@ spec:
         ports:
         - containerPort: 16346
         resources:
-          requests:
-            cpu: 1024m
-            memory: 1000Mi
           limits:
-            cpu: 1500m
-            memory: 1500Mi
+            cpu: 2500m
+            memory: 2048Mi
         readinessProbe:
           tcpSocket:
             port: 16346
@@ -1280,11 +1184,8 @@ spec:
         ports:
         - containerPort: 14322
         resources:
-          requests:
-            cpu: 500m
-            memory: 800Mi
           limits:
-            cpu: 1024m
+            cpu: 2000m
             memory: 1024Mi
         readinessProbe:
           tcpSocket:
@@ -1302,7 +1203,7 @@ spec:
   selector:
     matchLabels:
       app: ts-travel-service
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
@@ -1315,18 +1216,15 @@ spec:
         ports:
         - containerPort: 12346
         resources:
-          requests:
-            cpu: 1500m
-            memory: 1024Mi
           limits:
-            cpu: 2048m
-            memory: 2048Mi
+            cpu: 2500m
+            memory: 1024Mi
         readinessProbe:
           tcpSocket:
             port: 12346
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: apps/v1
@@ -1350,9 +1248,6 @@ spec:
         ports:
         - containerPort: 15678
         resources:
-          requests:
-            cpu: 50m
-            memory: 160Mi
           limits:
             cpu: 200m
             memory: 500Mi
@@ -1385,9 +1280,6 @@ spec:
         ports:
         - containerPort: 16101
         resources:
-          requests:
-            cpu: 500m
-            memory: 800Mi
           limits:
             cpu: 1024m
             memory: 1000Mi
@@ -1396,7 +1288,7 @@ spec:
             port: 16101
           initialDelaySeconds: 160
           periodSeconds: 10
-          timeoutSeconds: 5 
+          timeoutSeconds: 5
 ---
 
 apiVersion: v1

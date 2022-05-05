@@ -1,0 +1,42 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger
+spec:
+  strategy: allInOne
+  allInOne:
+    image: jaegertracing/all-in-one:latest
+    options:
+      log-level: debug
+  storage:
+    type: elasticsearch
+    esIndexCleaner:
+      enabled: True
+      numberOfDays: 30
+      schedule: "55 23 * * *"
+    options:
+      es:
+        server-urls: https://quickstart-es-http:9200
+        tls:
+          ca: /es/certificates/ca.crt
+        num-shards: 1
+        num-replicas: 0
+    secretName: jaeger-secret
+  volumeMounts:
+    - name: certificates
+      mountPath: /es/certificates/
+      readOnly: true
+  volumes:
+    - name: certificates
+      secret:
+        secretName: quickstart-es-http-certs-public
+  ingress:
+    enabled: false
+  query:
+    serviceType: NodePort
+    #annotations: 
+    #    kubernetes.io/ingress.class: nginx
+  agent:
+    strategy: DaemonSet # <9>
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: "" # <10>
