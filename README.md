@@ -13,4 +13,4 @@ series = {HPDC'22}
 }
 ```
 
-Detail instructions to run the program will be available soon. 
+Please follow this [repository](https://github.com/rajibhossen/advanced-pema) for updated version and setup instructions
